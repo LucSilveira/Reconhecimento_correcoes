@@ -2,7 +2,9 @@ package com.securepass.apisecurepass.controllers;
 
 import com.securepass.apisecurepass.azure.Blob;
 import com.securepass.apisecurepass.dtos.UserDto;
+import com.securepass.apisecurepass.models.LoginModel;
 import com.securepass.apisecurepass.models.UserModel;
+import com.securepass.apisecurepass.repositories.LoginRepository;
 import com.securepass.apisecurepass.repositories.TypeUsersRepository;
 import com.securepass.apisecurepass.repositories.UserRepository;
 import com.securepass.apisecurepass.services.FileUploadService;
@@ -38,6 +40,9 @@ public class UserController {
 
     @Autowired
     FileUploadService fileUploadService;
+
+    @Autowired
+    LoginRepository loginRepository;
 
     // Endpoint para listar todos os usuários
     @GetMapping
@@ -183,5 +188,23 @@ public class UserController {
         SearchType.ifPresent(userRepository::delete);
 
         return ResponseEntity.status(HttpStatus.OK).body("Usuario deletado");
+    }
+
+    @GetMapping("/login/{id}")
+    public ResponseEntity<Object> LoginByUser(@PathVariable(value = "id") UUID id)
+    {
+        Optional<UserModel> serachUser = userRepository.findById(id);
+
+        if (serachUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario nao encontrado");
+        }
+
+        List<LoginModel> loginsUser = loginRepository.findByUser( serachUser.get() );
+
+        if (loginsUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body( loginsUser );
     }
 }
