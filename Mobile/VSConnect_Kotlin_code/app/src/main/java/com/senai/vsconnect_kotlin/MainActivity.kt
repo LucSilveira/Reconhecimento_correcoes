@@ -1,8 +1,11 @@
 package com.senai.vsconnect_kotlin
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
+import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -19,6 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     //É uma propriedade privada  como o nome binding do tipo ActivityLoginBinding
     private lateinit var binding: ContentMainBinding
+    @SuppressLint("QueryPermissionsNeeded")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.content_main)
@@ -37,6 +41,15 @@ class MainActivity : AppCompatActivity() {
             val perfilIntent = Intent(this, LoginActivity::class.java  )
 
             startActivity(perfilIntent)
+        }
+
+        binding.buttonVWEQS.setOnClickListener(){
+            // URL do site que deseja abrir no navegador
+            val url = "https://www.vw.com.br/pt.html"
+
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+
+            startActivity(intent)
         }
         setContentView(binding.root)
     }
