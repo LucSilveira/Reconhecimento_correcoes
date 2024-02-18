@@ -1,40 +1,38 @@
 package com.securepass.apisecurepass.controllers;
 
-import com.securepass.apisecurepass.azure.Blob;
-import com.securepass.apisecurepass.dtos.LoginDto;
 import com.securepass.apisecurepass.models.LoginModel;
+import com.securepass.apisecurepass.models.UserModel;
 import com.securepass.apisecurepass.repositories.LoginRepository;
-import jakarta.validation.Valid;
-import org.springframework.beans.BeanUtils;
+import com.securepass.apisecurepass.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
-@RestController
-@RequestMapping(value = "/login", produces = {"application/json"})
+//@RestController
+//@RequestMapping(value = "/login", produces = {"application/json"})
+@Service
 public class LoginController {
 
     @Autowired
     LoginRepository loginRepository;
 
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<Object> loginComFoto(@ModelAttribute @Valid LoginDto loginDto){
+    @Autowired
+    UserRepository userRepository;
 
-        MultipartFile file = loginDto.image();
+//    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public Boolean loginComFoto(Optional<UserModel> user){
 
-        String extensaoArquivo = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf('.') + 1);
+        Optional<UserModel> searchUser = userRepository.findById( user.get().getId() );
 
-        String nomeArquivo = LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss")) + "." + extensaoArquivo;
+        if (searchUser.isEmpty()) {
+            return false;
+        }
 
-        var uploadBlob = Blob.UploadFileToBlob( file, nomeArquivo );
+        LoginModel loginModel = new LoginModel(searchUser.get());
 
-        return ResponseEntity.status(HttpStatus.OK).body( uploadBlob);
+        loginRepository.save( loginModel );
+
+        return true;
     }
-
 }

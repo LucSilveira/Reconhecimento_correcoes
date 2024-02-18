@@ -38,6 +38,9 @@ public class PhotoController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    LoginController loginController;
+
     // Define o endpoint que aceita requisições POST com multipart form data
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Object> uploadPhoto(@ModelAttribute @Valid PhotoDto photoDto) throws IOException {
@@ -99,9 +102,13 @@ public class PhotoController {
                         // Por exemplo:
                         UUID TextForFind = UUID.fromString(TextFinal);
                         Optional<UserModel> user = userRepository.findById(TextForFind);
+
                         if (user.isPresent()){
                             UserModel userLog= user.get();
-                            System.out.println(userLog.getId());
+
+                            // Logando o usuario encontrado
+                            loginController.loginComFoto( user );
+
 
                             return ResponseEntity.ok().body(userLog);
                         }
