@@ -31,6 +31,7 @@ import java.util.UUID;
 
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping(value = "/photo", produces = {"application/json"})
 public class PhotoController {
     @Autowired

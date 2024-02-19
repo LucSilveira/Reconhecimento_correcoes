@@ -143,6 +143,7 @@ class LoginActivity : AppCompatActivity() {
             override fun onFailure(call: Call<Servico>, t: Throwable) {
                 progressDialog.dismiss()
                 // Tratar falha na requisição, se necessário
+                Toast.makeText(this@LoginActivity, "Erro no processamento", Toast.LENGTH_SHORT).show()
             }
         })
     }
