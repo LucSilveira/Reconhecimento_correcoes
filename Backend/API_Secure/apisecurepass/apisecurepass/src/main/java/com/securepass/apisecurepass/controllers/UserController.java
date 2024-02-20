@@ -27,7 +27,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-//@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*")
 @RequestMapping(value = "/users", produces = {"application/json"})
 public class UserController {
 

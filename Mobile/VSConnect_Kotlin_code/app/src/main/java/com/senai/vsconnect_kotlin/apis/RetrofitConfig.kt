@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class RetrofitConfig {
     companion object{
 //        fun obterInstanciaRetrofit(url: String = "http://apisecurepasscenter.azurewebsites.net/") : Retrofit{
-        fun obterInstanciaRetrofit(url: String = "http://172.16.20.95:8081/") : Retrofit{
+        fun obterInstanciaRetrofit(url: String = "http://172.16.52.193:8081/") : Retrofit{
             return Retrofit.Builder()
                 .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create())
